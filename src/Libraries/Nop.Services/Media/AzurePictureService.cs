@@ -43,6 +43,7 @@ namespace Nop.Services.Media
 
         public AzurePictureService(IDataProvider dataProvider,
             IDbContext dbContext,
+            IDownloadService downloadService,
             IEventPublisher eventPublisher,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
@@ -58,6 +59,7 @@ namespace Nop.Services.Media
             NopConfig config)
             : base(dataProvider,
                   dbContext,
+                  downloadService,
                   eventPublisher,
                   httpContextAccessor,
                   fileProvider,

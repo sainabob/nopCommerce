@@ -429,6 +429,24 @@ namespace Nop.Core.Infrastructure
         }
 
         /// <summary>
+        /// Gets a virtual path from a physical disk path.
+        /// </summary>
+        /// <param name="path">The physical disk path</param>
+        /// <returns>The virtual path. E.g. "~/bin"</returns>
+        public virtual string GetVirtualPath(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return path;
+
+            if (!IsDirectory(path) && FileExists(path))
+                path = new FileInfo(path).DirectoryName;
+
+            path = path?.Replace(Root, "").Replace('\\', '/').Trim('/').TrimStart('~', '/');
+
+            return $"~/{path ?? ""}";
+        }
+
+        /// <summary>
         /// Checks if the path is directory
         /// </summary>
         /// <param name="path">Path for check</param>
@@ -448,7 +466,7 @@ namespace Nop.Core.Infrastructure
             path = path.Replace("~/", string.Empty).TrimStart('/');
             return Combine(BaseDirectory ?? string.Empty, path);
         }
-        
+
         /// <summary>
         /// Reads the contents of the file into a byte array
         /// </summary>
