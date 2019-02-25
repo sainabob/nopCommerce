@@ -1177,6 +1177,8 @@ namespace Nop.Services.Common
                 PrintOrdersToPdf(fileStream, orders, languageId, vendorId);
             }
 
+            _fileProvider.ShareFile(filePath);
+
             return filePath;
         }
 

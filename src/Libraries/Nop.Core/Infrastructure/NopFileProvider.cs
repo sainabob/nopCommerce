@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,11 +15,14 @@ namespace Nop.Core.Infrastructure
     /// </summary>
     public class NopFileProvider : PhysicalFileProvider, INopFileProvider
     {
+        private readonly INopFileSharing _fileSharing;
+
         /// <summary>
         /// Initializes a new instance of a NopFileProvider
         /// </summary>
         /// <param name="hostingEnvironment">Hosting environment</param>
-        public NopFileProvider(IHostingEnvironment hostingEnvironment) 
+        /// <param name="fileSharing">File sharing service</param>
+        public NopFileProvider(IHostingEnvironment hostingEnvironment, INopFileSharing fileSharing=null) 
             : base(File.Exists(hostingEnvironment.WebRootPath) ? Path.GetDirectoryName(hostingEnvironment.WebRootPath) : hostingEnvironment.WebRootPath)
         {
             var path = hostingEnvironment.ContentRootPath ?? string.Empty;
@@ -27,6 +30,7 @@ namespace Nop.Core.Infrastructure
                 path = Path.GetDirectoryName(path);
 
             BaseDirectory = path;
+            _fileSharing = fileSharing;
         }
 
         #region Utilities
@@ -202,7 +206,19 @@ namespace Nop.Core.Infrastructure
         /// </returns>
         public virtual bool FileExists(string filePath)
         {
-            return File.Exists(filePath);
+            var exists = File.Exists(filePath);
+
+            if (exists || _fileSharing == null || !_fileSharing.IsEnable || !_fileSharing.FileExists(filePath)) 
+                return exists;
+
+            var binaryData = _fileSharing.GetBinaryData(filePath);
+
+            if (binaryData == null) 
+                return false;
+
+            WriteAllBytes(filePath, binaryData);
+
+            return true;
         }
 
         /// <summary>
@@ -480,12 +496,27 @@ namespace Nop.Core.Infrastructure
         }
 
         /// <summary>
+        /// Sharing the file
+        /// </summary>
+        /// <param name="filePath">The file for sharing</param>
+        public virtual void ShareFile(string filePath)
+        {
+            if(_fileSharing==null || !_fileSharing.IsEnable)
+                return;
+
+            var binaryData = ReadAllBytes(filePath);
+
+            _fileSharing.Share(filePath, binaryData);
+        }
+
+        /// <summary>
         /// Writes the specified byte array to the file
         /// </summary>
         /// <param name="filePath">The file to write to</param>
         /// <param name="bytes">The bytes to write to the file</param>
         public virtual void WriteAllBytes(string filePath, byte[] bytes)
         {
+            CreateDirectory(GetDirectoryName(filePath));
             File.WriteAllBytes(filePath, bytes);
         }
 

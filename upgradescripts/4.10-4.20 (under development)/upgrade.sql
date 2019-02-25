@@ -1687,3 +1687,38 @@ BEGIN
 END
 GO
 
+ --new table
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SharedFile]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[SharedFile](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[FilePath] [nvarchar](256) NOT NULL,
+	[FileSize] [bigint] NOT NULL,
+	CONSTRAINT [PK_SharedFile] PRIMARY KEY CLUSTERED 
+		(
+			[Id] ASC
+		)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+		) ON [PRIMARY]
+END
+GO
+
+ --new table
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SharedFileBinary]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[SharedFileBinary](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[BinaryData] [varbinary](max) NULL,
+	[SharedFileId] [int] NOT NULL,
+	 CONSTRAINT [PK_SharedFileBinary] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+	ALTER TABLE [dbo].[SharedFileBinary]  WITH CHECK ADD  CONSTRAINT [FK_SharedFileBinary_SharedFile_SharedFileId] FOREIGN KEY([SharedFileId])
+	REFERENCES [dbo].[SharedFile] ([Id])
+	ON DELETE CASCADE
+
+	ALTER TABLE [dbo].[SharedFileBinary] CHECK CONSTRAINT [FK_SharedFileBinary_SharedFile_SharedFileId]
+END
+GO

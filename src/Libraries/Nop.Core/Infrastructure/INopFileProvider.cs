@@ -289,6 +289,12 @@ namespace Nop.Core.Infrastructure
         /// This value is expressed in UTC time
         /// </param>
         void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc);
+
+        /// <summary>
+        /// Sharing the file
+        /// </summary>
+        /// <param name="filePath">The path of file for sharing</param>
+        void ShareFile(string filePath);
         
         /// <summary>
         /// Writes the specified byte array to the file

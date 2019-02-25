@@ -51,6 +51,11 @@
         public bool UseRedisToStorePluginsInfo { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether file sharing is enable
+        /// </summary>
+        public bool SharingFile { get; set; }
+
+        /// <summary>
         /// Gets or sets path to database with user agent strings
         /// </summary>
         public string UserAgentStringsPath { get; set; }

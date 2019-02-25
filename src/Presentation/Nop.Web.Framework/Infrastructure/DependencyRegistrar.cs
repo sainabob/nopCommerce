@@ -31,6 +31,7 @@ using Nop.Services.ExportImport;
 using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
+using Nop.Services.Infrastructure;
 using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -72,6 +73,10 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="config">Config</param>
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {
+            //file sharing
+            if(DataSettingsManager.DatabaseIsInstalled)
+                builder.RegisterType<NopFileDatabaseSharing>().As<INopFileSharing>().InstancePerLifetimeScope();
+            
             //file provider
             builder.RegisterType<NopFileProvider>().As<INopFileProvider>().InstancePerLifetimeScope();
 
