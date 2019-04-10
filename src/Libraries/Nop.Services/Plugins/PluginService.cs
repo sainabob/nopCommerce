@@ -88,6 +88,23 @@ namespace Nop.Services.Plugins
         }
 
         /// <summary>
+        /// Check whether to load the plugin based on dependency from other plugin
+        /// </summary>
+        /// <param name="pluginDescriptor">Plugin descriptor to check</param>
+        /// <param name="dependsOnSystemName">Other plugin system name</param>
+        /// <returns>Result of check</returns>
+        protected virtual bool FilterByDepensOn(PluginDescriptor pluginDescriptor, string dependsOnSystemName)
+        {
+            if (pluginDescriptor == null)
+                throw new ArgumentNullException(nameof(pluginDescriptor));
+
+            if (string.IsNullOrEmpty(dependsOnSystemName))
+                return true;
+
+            return pluginDescriptor.DependsOn?.Any(systemName => systemName.Equals(dependsOnSystemName, StringComparison.InvariantCultureIgnoreCase)) ?? false;
+        }
+
+        /// <summary>
         /// Check whether to load the plugin based on the customer passed
         /// </summary>
         /// <param name="pluginDescriptor">Plugin descriptor to check</param>
@@ -127,6 +144,17 @@ namespace Nop.Services.Plugins
             return pluginDescriptor.LimitedToStores.Contains(storeId);
         }
 
+        /// <summary>
+        /// Get list installed plugins after restart application
+        /// </summary>
+        /// <returns>List of installed plugins</returns>
+        protected virtual IList<string> GetInstalledPluginsAfterRestart()
+        {
+            return _pluginsInfo.InstalledPluginNames.Where(instaledSystemName =>
+                _pluginsInfo.PluginNamesToUninstall.All(systemName => !systemName.Equals(instaledSystemName, StringComparison.InvariantCultureIgnoreCase)) &&
+                _pluginsInfo.PluginNamesToDelete.All(systemName => !systemName.Equals(instaledSystemName, StringComparison.InvariantCultureIgnoreCase))).ToList();
+        }
+
         #endregion
 
         #region Methods
@@ -139,9 +167,10 @@ namespace Nop.Services.Plugins
         /// <param name="customer">Filter by  customer; pass null to load all records</param>
         /// <param name="storeId">Filter by store; pass 0 to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
+        /// <param name="dependsOnSystemName">System name of the plugin to define dependencies</param>
         /// <returns>Plugin descriptors</returns>
         public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            Customer customer = null, int storeId = 0, string group = null) where TPlugin : class, IPlugin
+            Customer customer = null, int storeId = 0, string group = null, string dependsOnSystemName = "") where TPlugin : class, IPlugin
         {
             var pluginDescriptors = _pluginsInfo.PluginDescriptors;
 
@@ -150,7 +179,8 @@ namespace Nop.Services.Plugins
                 FilterByLoadMode(descriptor, loadMode) &&
                 FilterByCustomer(descriptor, customer) &&
                 FilterByStore(descriptor, storeId) &&
-                FilterByPluginGroup(descriptor, group));
+                FilterByPluginGroup(descriptor, group) &&
+                FilterByDepensOn(descriptor, dependsOnSystemName));
 
             //filter by the passed type
             if (typeof(TPlugin) != typeof(IPlugin))
@@ -242,28 +272,94 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
         /// <param name="customer">Customer</param>
-        public virtual void PreparePluginToInstall(string systemName, Customer customer = null)
+        /// <param name="checkDependencies">Specifies whether to check plugin dependencies</param>
+        /// <returns></returns> 
+        public virtual string PreparePluginToInstall(string systemName, Customer customer = null, bool checkDependencies = true)
         {
             //add plugin name to the appropriate list (if not yet contained) and save changes
             if (_pluginsInfo.PluginNamesToInstall.Any(item => item.SystemName == systemName)) 
-                return;
+                return string.Empty;
+
+            if (checkDependencies)
+            {
+                var descriptor = GetPluginDescriptorBySystemName<IPlugin>(systemName, LoadPluginsMode.NotInstalledOnly);
+                var installedPluginsAfterRestart = GetInstalledPluginsAfterRestart();
+
+                if (descriptor.DependsOn?.Any() ?? false)
+                {
+                    var dependsOn = descriptor.DependsOn.Where(dependsOnSystemName =>
+                        !installedPluginsAfterRestart.Contains(dependsOnSystemName)).ToList();
+
+                    if (dependsOn.Any())
+                    {
+                        var dependsOnSystemNames = dependsOn.Aggregate((all, current) => $"{all}, {current}");
+
+                        //do not inject services via constructor because it'll cause circular references
+                        var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+
+                        return string.Format(localizationService.GetResource("Admin.Plugins.Errors.InstallDependsOn"), string.IsNullOrEmpty(descriptor.FriendlyName) ? descriptor.SystemName : descriptor.FriendlyName, dependsOnSystemNames);
+                    }
+                }
+            }
 
             _pluginsInfo.PluginNamesToInstall.Add((systemName, customer?.CustomerGuid));
             _pluginsInfo.Save();
+
+            return string.Empty;
         }
 
         /// <summary>
         /// Prepare plugin to the uninstallation
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
-        public virtual void PreparePluginToUninstall(string systemName)
+        public virtual string PreparePluginToUninstall(string systemName)
         {
             //add plugin name to the appropriate list (if not yet contained) and save changes
             if (_pluginsInfo.PluginNamesToUninstall.Contains(systemName))
-                return;
+                return string.Empty;
+
+            var dependentPlugins = GetPluginDescriptors<IPlugin>(dependsOnSystemName: systemName).ToList();
+            var installedPluginsAfterRestart = GetInstalledPluginsAfterRestart();
+            var descriptor = GetPluginDescriptorBySystemName<IPlugin>(systemName);
+
+            if (dependentPlugins.Any())
+            {
+                var dependsOn = new List<string>();
+
+                foreach (var dependentPlugin in dependentPlugins)
+                {
+                    if (!installedPluginsAfterRestart.Any(installedSystemName => installedSystemName.Equals(dependentPlugin.SystemName, StringComparison.InvariantCultureIgnoreCase)))
+                        continue;
+
+                    dependsOn.Add(string.IsNullOrEmpty(dependentPlugin.FriendlyName)
+                        ? dependentPlugin.SystemName
+                        : dependentPlugin.FriendlyName);
+                }
+
+                if (dependsOn.Any())
+                {
+                    var dependsOnSystemNames = dependsOn.Aggregate((all, current) => $"{all}, {current}");
+
+                    //do not inject services via constructor because it'll cause circular references
+                    var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+
+                    return string.Format(localizationService.GetResource("Admin.Plugins.Errors.UninstallDependsOn"),
+                        string.IsNullOrEmpty(descriptor.FriendlyName) ? descriptor.SystemName : descriptor.FriendlyName,
+                        dependsOnSystemNames);
+                }
+            }
+
+            var instance = descriptor.Instance<IPlugin>();
+
+            var canBeUninstalled = instance.CanBeUninstalled(installedPluginsAfterRestart);
+
+            if (!string.IsNullOrEmpty(canBeUninstalled))
+                return canBeUninstalled;
 
             _pluginsInfo.PluginNamesToUninstall.Add(systemName);
             _pluginsInfo.Save();
+
+            return string.Empty;
         }
 
         /// <summary>

@@ -12252,6 +12252,9 @@
   <LocaleResource Name="Admin.Plugins">
     <Value>Plugins</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Plugins.Errors.InstallDependsOn">
+    <Value>The "{0}" plugin depends on the following plugins which must also be installed: {1}</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Plugins.Errors.NotDeleted">
     <Value>The plugin "{0}" not deleted</Value>
   </LocaleResource>
@@ -12261,6 +12264,9 @@
   <LocaleResource Name="Admin.Plugins.Errors.NotUninstalled">
     <Value>The plugin "{0}" not uninstalled</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Plugins.Errors.UninstallDependsOn">
+    <Value>The following plugins depend on the "{0}" plugin and must be uninstalled beforehand: {1}</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Plugins.Saved">
     <Value>The plugin has been updated successfully.</Value>
   </LocaleResource>

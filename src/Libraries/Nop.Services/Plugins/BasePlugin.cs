@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Plugins
+﻿using System.Collections.Generic;
+
+namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Base plugin
@@ -30,6 +32,16 @@
         /// </summary>
         public virtual void Uninstall() 
         {
+        }
+
+        /// <summary>
+        /// Checks if it is possible to uninstall the plugin
+        /// </summary>
+        /// <param name="installedPluginsAfterRestart">List of plugins that will be active after reboot</param>
+        /// <returns>If uninstallation is allowed, NULL or an empty string is returned, otherwise the text of the reason for failure is returned</returns>
+        public virtual string CanBeUninstalled(IList<string> installedPluginsAfterRestart)
+        {
+            return string.Empty;
         }
     }
 }

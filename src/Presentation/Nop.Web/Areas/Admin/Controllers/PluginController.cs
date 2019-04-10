@@ -225,9 +225,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (pluginDescriptor.Installed)
                     return RedirectToAction("Plugins");
 
-                _pluginService.PreparePluginToInstall(pluginDescriptor.SystemName, _workContext.CurrentCustomer);
-                pluginDescriptor.ShowInPluginsList = false;
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.ChangesApplyAfterReboot"));
+                var errorMessage = _pluginService.PreparePluginToInstall(pluginDescriptor.SystemName, _workContext.CurrentCustomer);
+                if (string.IsNullOrEmpty(errorMessage))
+                {
+                    pluginDescriptor.ShowInPluginsList = false;
+                    _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.ChangesApplyAfterReboot"));
+                }
+                else
+                {
+                    _notificationService.WarningNotification(errorMessage);
+                }
             }
             catch (Exception exc)
             {
@@ -261,9 +268,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (!pluginDescriptor.Installed)
                     return RedirectToAction("Plugins");
 
-                _pluginService.PreparePluginToUninstall(pluginDescriptor.SystemName);
-                pluginDescriptor.ShowInPluginsList = false;
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.ChangesApplyAfterReboot"));
+                var errorMessage = _pluginService.PreparePluginToUninstall(pluginDescriptor.SystemName);
+                if (string.IsNullOrEmpty(errorMessage))
+                {
+                    pluginDescriptor.ShowInPluginsList = false;
+                    _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.ChangesApplyAfterReboot"));
+                }
+                else
+                {
+                    _notificationService.WarningNotification(errorMessage);
+                }
             }
             catch (Exception exc)
             {
