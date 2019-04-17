@@ -1119,7 +1119,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.OrderMaximumQuantity = 10000;
                 model.TaxCategoryId = _taxSettings.DefaultTaxCategoryId;
                 model.UnlimitedDownloads = true;
-                model.IsShipEnabled = true;
+                model.IsShipEnabled = false; // 默认免运费
                 model.AllowCustomerReviews = true;
                 model.Published = true;
                 model.VisibleIndividually = true;
