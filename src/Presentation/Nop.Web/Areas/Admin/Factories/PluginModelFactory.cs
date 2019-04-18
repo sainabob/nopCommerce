@@ -156,7 +156,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.SearchName)),
                 new FilterParameter(nameof(searchModel.SearchVersionId)),
@@ -187,7 +187,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Download"),
                     Width = "150",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderCustom("renderColumnUrl")
                 },
                 new ColumnProperty(nameof(OfficialFeedPluginModel.CategoryName))
@@ -223,7 +223,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.SearchLoadModeId)),
                 new FilterParameter(nameof(searchModel.SearchGroup))
@@ -232,14 +232,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(PluginModel.ConfigurationUrl)) { Visible = false },
-                new ColumnProperty(nameof(PluginModel.SystemName)) { Visible = false },
-                new ColumnProperty(nameof(PluginModel.Version)) { Visible = false },
-                new ColumnProperty(nameof(PluginModel.Author)) { Visible = false },
-                new ColumnProperty(nameof(PluginModel.DisplayOrder)) { Visible = false },
-                new ColumnProperty(nameof(PluginModel.Installed)) { Visible = false },
-                new ColumnProperty(nameof(PluginModel.IsEnabled)) { Visible = false },
-                new ColumnProperty(nameof(PluginModel.CanChangeEnabled)) { Visible = false },
                 new ColumnProperty(nameof(PluginModel.Group))
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Plugins.Fields.Group"),
@@ -268,7 +260,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.Plugins.Fields.Installation"),
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderCustom("renderColumnInstalled")
                 }
             };

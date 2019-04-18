@@ -72,9 +72,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 LengthMenu = searchModel.AvailablePageSizes
             };
 
-            //prepare filters to search
-            model.Filters = null;
-
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
@@ -105,7 +102,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "50",
-                    ClassName = StyleColumn.CenterAll,
+                    ClassName = StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("EditForumGroup"))
                 }
             };
@@ -121,7 +118,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            detailModel.Filters = new List<FilterParameter>()
+            detailModel.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(ForumModel.ForumGroupId), nameof(ForumGroupModel.Id), true)
             };
@@ -148,7 +145,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "50",
-                    ClassName = StyleColumn.CenterAll,
+                    ClassName = StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("EditForum"))
                 }
             };

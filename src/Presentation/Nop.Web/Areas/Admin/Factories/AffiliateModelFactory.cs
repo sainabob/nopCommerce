@@ -165,7 +165,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.SearchFirstName)),
                 new FilterParameter(nameof(searchModel.SearchLastName)),
@@ -198,7 +198,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("Edit"))
                 }
             };
@@ -332,10 +332,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new AffiliatedOrderListModel
+            var model = new AffiliatedOrderListModel().PrepareToGrid(searchModel, orders, () =>
             {
                 //fill in model values from the entity
-                Data = orders.Select(order => 
+                return orders.Select(order =>
                 {
                     var affiliatedOrderModel = order.ToModel<AffiliatedOrderModel>();
 
@@ -347,9 +347,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     affiliatedOrderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
 
                     return affiliatedOrderModel;
-                }),
-                Total = orders.TotalCount
-            };
+                });
+            });
 
             return model;
         }

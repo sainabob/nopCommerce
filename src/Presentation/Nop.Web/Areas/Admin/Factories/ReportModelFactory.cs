@@ -89,7 +89,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.SearchPublishedId))
             };
@@ -97,10 +97,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(LowStockProductModel.Attributes))
-                {
-                    Visible = false
-                },
                 new ColumnProperty(nameof(LowStockProductModel.Name))
                 {
                     Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Name"),
@@ -128,7 +124,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.View"),
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
                 }
             };
@@ -154,7 +150,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.StartDate)),
                 new FilterParameter(nameof(searchModel.EndDate)),
@@ -186,7 +182,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.View"),
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
                 }
             };
@@ -212,7 +208,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.StartDate)),
                 new FilterParameter(nameof(searchModel.EndDate)),
@@ -233,7 +229,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
                 }
             };
@@ -259,7 +255,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.StartDate)),
                 new FilterParameter(nameof(searchModel.EndDate)),
@@ -303,9 +299,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 LengthMenu = searchModel.AvailablePageSizes
             };
 
-            //prepare filters to search
-            model.Filters = null;
-
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
@@ -341,7 +334,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.OrderBy), 1),
                 new FilterParameter(nameof(searchModel.StartDate), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal)),
@@ -370,7 +363,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.View"),
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderButtonView(new DataUrl("~/Admin/Customer/Edit/"))
                 }
             };
@@ -396,7 +389,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.OrderBy), 2),
                 new FilterParameter(nameof(searchModel.StartDate), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
@@ -425,7 +418,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.View"),
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderButtonView(new DataUrl("~/Admin/Customer/Edit/"))
                 }
             };

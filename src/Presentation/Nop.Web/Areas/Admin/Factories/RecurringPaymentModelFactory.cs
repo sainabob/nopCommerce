@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -10,6 +12,7 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -70,8 +73,143 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareRecurringPaymentHistoryGridModel(searchModel);
 
             return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareRecurringPaymentGridModel(RecurringPaymentSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "recurringpayments-grid",
+                UrlRead = new DataUrl("List", "RecurringPayment", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(RecurringPaymentModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.RecurringPayments.Fields.ID"),
+                    Width = "50"
+                },
+                new ColumnProperty(nameof(RecurringPaymentModel.CustomerId))
+                {
+                    Title = _localizationService.GetResource("Admin.RecurringPayments.Fields.Customer"),
+                    Width = "200",
+                    Render = new RenderCustom("renderColumnCustomerInfo")
+                },
+                new ColumnProperty(nameof(RecurringPaymentModel.CycleLength))
+                {
+                    Title = _localizationService.GetResource("Admin.RecurringPayments.Fields.CycleLength"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(RecurringPaymentModel.CyclePeriodStr))
+                {
+                    Title = _localizationService.GetResource("Admin.RecurringPayments.Fields.CyclePeriod"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(RecurringPaymentModel.IsActive))
+                {
+                    Title = _localizationService.GetResource("Admin.RecurringPayments.Fields.IsActive"),
+                    ClassName =  StyleColumn.CenterAll,
+                    Width = "200",
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(RecurringPaymentModel.StartDate))
+                {
+                    Title = _localizationService.GetResource("Admin.RecurringPayments.Fields.StartDate"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(RecurringPaymentModel.NextPaymentDate))
+                {
+                    Title = _localizationService.GetResource("Admin.RecurringPayments.Fields.NextPaymentDate"),
+                    Width = "200",
+                    Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(RecurringPaymentModel.TotalCycles))
+                {
+                    Title = _localizationService.GetResource("Admin.RecurringPayments.Fields.TotalCycles"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(RecurringPaymentModel.CyclesRemaining))
+                {
+                    Title = _localizationService.GetResource("Admin.RecurringPayments.Fields.CyclesRemaining"),
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(RecurringPaymentModel.Id))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Edit"),
+                    Width = "100",
+                    ClassName =  StyleColumn.ButtonStyle,
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareRecurringPaymentHistoryGridModel(RecurringPaymentHistorySearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "history-grid",
+                UrlRead = new DataUrl("HistoryList", "RecurringPayment", new RouteValueDictionary { [nameof(searchModel.RecurringPaymentId)] = searchModel.RecurringPaymentId }),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+            
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(RecurringPaymentHistoryModel.CustomOrderNumber))
+                {
+                    Title = _localizationService.GetResource("Admin.RecurringPayments.History.CustomOrderNumber"),
+                    ClassName =  StyleColumn.ButtonStyle,
+                    Width = "200",
+                    Render = new RenderCustom("renderColumnOrderInfo")
+                },
+                new ColumnProperty(nameof(RecurringPaymentHistoryModel.OrderStatus))
+                {
+                    Title = _localizationService.GetResource("Admin.RecurringPayments.History.OrderStatus"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(RecurringPaymentHistoryModel.PaymentStatus))
+                {
+                    Title = _localizationService.GetResource("Admin.RecurringPayments.History.PaymentStatus"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(RecurringPaymentHistoryModel.ShippingStatus))
+                {
+                    Title = _localizationService.GetResource("Admin.RecurringPayments.History.ShippingStatus"),
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(RecurringPaymentHistoryModel.CreatedOn))
+                {
+                    Title = _localizationService.GetResource("Admin.RecurringPayments.History.CreatedOn"),
+                    Width = "100",
+                    Render = new RenderDate()
+                }
+            };
+
+            return model;
         }
 
         #endregion
@@ -90,6 +228,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareRecurringPaymentGridModel(searchModel);
 
             return searchModel;
         }
@@ -109,9 +248,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new RecurringPaymentListModel
+            var model = new RecurringPaymentListModel().PrepareToGrid(searchModel, recurringPayments, () =>
             {
-                Data = recurringPayments.Select(recurringPayment =>
+                return recurringPayments.Select(recurringPayment =>
                 {
                     //fill in model values from the entity
                     var recurringPaymentModel = recurringPayment.ToModel<RecurringPaymentModel>();
@@ -134,9 +273,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         ? recurringPayment.InitialOrder.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
 
                     return recurringPaymentModel;
-                }),
-                Total = recurringPayments.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -156,9 +294,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //fill in model values from the entity
             if (model == null)
-            {
                 model = recurringPayment.ToModel<RecurringPaymentModel>();
-            }
 
             //convert dates to the user time
             if (recurringPayment.NextPaymentDate.HasValue)
@@ -200,9 +336,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .ToPagedList(searchModel);
 
             //prepare list model
-            var model = new RecurringPaymentHistoryListModel
+            var model = new RecurringPaymentHistoryListModel().PrepareToGrid(searchModel, recurringPayments, () =>
             {
-                Data = recurringPayments.Select(historyEntry =>
+                return recurringPayments.Select(historyEntry =>
                 {
                     //fill in model values from the entity
                     var historyModel = historyEntry.ToModel<RecurringPaymentHistoryModel>();
@@ -221,9 +357,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     historyModel.CustomOrderNumber = order.CustomOrderNumber;
 
                     return historyModel;
-                }),
-                Total = recurringPayments.TotalCount
-            };
+                });
+            });
 
             return model;
         }

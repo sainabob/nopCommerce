@@ -64,8 +64,76 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareStateProvinceGridModel(searchModel);
 
             return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareStateProvinceGridModel(StateProvinceSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "states-grid",
+                UrlRead = new DataUrl("States", "Country", null),
+                UrlDelete = new DataUrl("StateDelete", "Country", null),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes,
+
+                //prepare filters to search
+                Filters = new List<FilterParameter>
+                {
+                    new FilterParameter(nameof(StateProvinceSearchModel.CountryId), searchModel.CountryId)
+                },
+
+                //prepare model columns
+                ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(StateProvinceModel.Name))
+                    {
+                        Title = _localizationService.GetResource("Admin.Configuration.Countries.States.Fields.Name"),
+                        Width = "300"
+                    },
+                    new ColumnProperty(nameof(StateProvinceModel.Abbreviation))
+                    {
+                        Title = _localizationService.GetResource("Admin.Configuration.Countries.States.Fields.Abbreviation"),
+                        Width = "150"
+                    },
+                    new ColumnProperty(nameof(StateProvinceModel.Published))
+                    {
+                        Title = _localizationService.GetResource("Admin.Configuration.Countries.States.Fields.Published"),
+                        Width = "100",
+                        ClassName = StyleColumn.CenterAll,
+                        Render = new RenderBoolean()
+                    },
+                    new ColumnProperty(nameof(StateProvinceModel.DisplayOrder))
+                    {
+                        Title = _localizationService.GetResource("Admin.Configuration.Countries.States.Fields.DisplayOrder"),
+                        Width = "100"
+                    },
+                    new ColumnProperty(nameof(StateProvinceModel.Id))
+                    {
+                        Title = _localizationService.GetResource("Admin.Common.Edit"),
+                        Width = "100",
+                        ClassName = StyleColumn.ButtonStyle,
+                        Render = new RenderCustom("renderColumnEdit")
+                    },
+                    new ColumnProperty(nameof(StateProvinceModel.Id))
+                    {
+                        Title = _localizationService.GetResource("Admin.Common.Delete"),
+                        Width = "100",
+                        Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")){ Style = StyleButton.Default },
+                        ClassName = StyleColumn.ButtonStyle
+                    }
+                }
+            };
+
+            return model;
         }
 
         /// <summary>
@@ -84,10 +152,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };
-
-            //prepare filters to search
-            model.Filters = null;
-
+            
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
@@ -160,7 +225,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "50",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("Edit"))
                 }
             };
@@ -284,12 +349,11 @@ namespace Nop.Web.Areas.Admin.Factories
             var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new StateProvinceListModel
+            var model = new StateProvinceListModel().PrepareToGrid(searchModel, states, ()=>
             {
                 //fill in model values from the entity
-                Data = states.Select(state => state.ToModel<StateProvinceModel>()),
-                Total = states.TotalCount
-            };
+                return states.Select(state => state.ToModel<StateProvinceModel>());
+            });
 
             return model;
         }

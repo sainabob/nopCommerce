@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -108,6 +109,50 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareDiscountProductGridModel(DiscountProductSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "products-grid",
+                UrlRead = new DataUrl("ProductList", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
+                UrlDelete = new DataUrl("ProductDelete", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
+                BindColumnNameActionDelete = nameof(DiscountProductModel.ProductId),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(DiscountProductModel.ProductName))
+                {
+                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.AppliedToProducts.Product")
+                },
+                new ColumnProperty(nameof(DiscountProductModel.ProductId))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.View"),
+                    Width = "150",
+                    ClassName =  StyleColumn.ButtonStyle,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                },
+                new ColumnProperty(nameof(DiscountProductModel.ProductId))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Delete"),
+                    Width = "150",
+                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
+                    ClassName =  StyleColumn.ButtonStyle
+                }
+            };
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare discount product search model
         /// </summary>
         /// <param name="searchModel">Discount product search model</param>
@@ -125,8 +170,53 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareDiscountProductGridModel(searchModel);
 
             return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareDiscountCategoryGridModel(DiscountCategorySearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "categories-grid",
+                UrlRead = new DataUrl("CategoryList", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
+                UrlDelete = new DataUrl("CategoryDelete", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
+                BindColumnNameActionDelete = nameof(DiscountCategoryModel.CategoryId),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(DiscountCategoryModel.CategoryName))
+                {
+                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.AppliedToCategories.Category")
+                },
+                new ColumnProperty(nameof(DiscountCategoryModel.CategoryId))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.View"),
+                    Width = "150",
+                    ClassName =  StyleColumn.ButtonStyle,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Category/Edit/"))
+                },
+                new ColumnProperty(nameof(DiscountCategoryModel.CategoryId))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Delete"),
+                    Width = "150",
+                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
+                    ClassName =  StyleColumn.ButtonStyle
+                }
+            };
+
+            return model;
         }
 
         /// <summary>
@@ -147,8 +237,53 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareDiscountCategoryGridModel(searchModel);
 
             return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare datatables model
+        /// </summary>
+        /// <param name="searchModel">Search model</param>
+        /// <returns>Datatables model</returns>
+        protected virtual DataTablesModel PrepareDiscountManufacturerGridModel(DiscountManufacturerSearchModel searchModel)
+        {
+            //prepare common properties
+            var model = new DataTablesModel
+            {
+                Name = "manufacturers-grid",
+                UrlRead = new DataUrl("ManufacturerList", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
+                UrlDelete = new DataUrl("ManufacturerDelete", "Discount", new RouteValueDictionary { [nameof(searchModel.DiscountId)] = searchModel.DiscountId }),
+                BindColumnNameActionDelete = nameof(DiscountManufacturerModel.ManufacturerId),
+                Length = searchModel.PageSize,
+                LengthMenu = searchModel.AvailablePageSizes
+            };
+
+            //prepare model columns
+            model.ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(DiscountManufacturerModel.ManufacturerName))
+                {
+                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.AppliedToManufacturers.Manufacturer")
+                },
+                new ColumnProperty(nameof(DiscountManufacturerModel.ManufacturerId))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.View"),
+                    Width = "150",
+                    ClassName =  StyleColumn.ButtonStyle,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Manufacturer/Edit/"))
+                },
+                new ColumnProperty(nameof(DiscountManufacturerModel.ManufacturerId))
+                {
+                    Title = _localizationService.GetResource("Admin.Common.Delete"),
+                    Width = "150",
+                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
+                    ClassName =  StyleColumn.ButtonStyle
+                }
+            };
+
+            return model;
         }
 
         /// <summary>
@@ -170,6 +305,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareDiscountManufacturerGridModel(searchModel);
 
             return searchModel;
         }
@@ -192,7 +328,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.SearchDiscountTypeId)),
                 new FilterParameter(nameof(searchModel.SearchDiscountCouponCode)),
@@ -204,22 +340,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(DiscountModel.UsePercentage))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(DiscountModel.DiscountPercentage))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(DiscountModel.DiscountAmount))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(DiscountModel.PrimaryStoreCurrencyCode))
-                {
-                    Visible = false
-                },
                 new ColumnProperty(nameof(DiscountModel.Name))
                 {
                     Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.Name"),
@@ -257,7 +377,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("Edit"))
                 }
             };
@@ -671,19 +791,18 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new DiscountProductListModel
+            var model = new DiscountProductListModel().PrepareToGrid(searchModel, discountProducts, () =>
             {
                 //fill in model values from the entity
-                Data = discountProducts.Select(product =>
+                return discountProducts.Select(product =>
                 {
                     var discountProductModel = product.ToModel<DiscountProductModel>();
                     discountProductModel.ProductId = product.Id;
                     discountProductModel.ProductName = product.Name;
 
                     return discountProductModel;
-                }),
-                Total = discountProducts.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -775,10 +894,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new DiscountCategoryListModel
+            var model = new DiscountCategoryListModel().PrepareToGrid(searchModel, discountCategories, () =>
             {
                 //fill in model values from the entity
-                Data = discountCategories.Select(category =>
+                return discountCategories.Select(category =>
                 {
                     var discountCategoryModel = category.ToModel<DiscountCategoryModel>();
 
@@ -786,10 +905,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     discountCategoryModel.CategoryId = category.Id;
 
                     return discountCategoryModel;
-                }),
-
-                Total = discountCategories.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -866,19 +983,18 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new DiscountManufacturerListModel
+            var model = new DiscountManufacturerListModel().PrepareToGrid(searchModel, discountManufacturers, () =>
             {
                 //fill in model values from the entity
-                Data = discountManufacturers.Select(manufacturer =>
+                return discountManufacturers.Select(manufacturer =>
                 {
                     var discountManufacturerModel = manufacturer.ToModel<DiscountManufacturerModel>();
                     discountManufacturerModel.ManufacturerId = manufacturer.Id;
                     discountManufacturerModel.ManufacturerName = manufacturer.Name;
 
                     return discountManufacturerModel;
-                }),
-                Total = discountManufacturers.TotalCount
-            };
+                });
+            });
 
             return model;
         }

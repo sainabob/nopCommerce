@@ -110,7 +110,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.ShoppingCartType)),
                 new FilterParameter(nameof(searchModel.StartDate)),
@@ -132,10 +132,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 },
                 new ColumnProperty(nameof(ShoppingCartModel.CustomerEmail))
                 {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(ShoppingCartModel.CustomerEmail))
-                {
                     Title = _localizationService.GetResource("Admin.CurrentCarts.Customer"),
                     Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", nameof(ShoppingCartModel.CustomerId)))
                 },
@@ -151,14 +147,14 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Name = "carts-grid",
                 UrlRead = new DataUrl("GetCartDetails", "ShoppingCart", null),
-                UrlAction = new DataUrl("DeleteItem", "ShoppingCart", null),
+                UrlDelete = new DataUrl("DeleteItem", "ShoppingCart", null),
                 IsChildTable = true,
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };
 
             //prepare filters to search
-            detailModel.Filters = new List<FilterParameter>()
+            detailModel.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(ShoppingCartItemSearchModel.CustomerId), nameof(ShoppingCartItemSearchModel.CustomerId), true),
                 new FilterParameter(nameof(ShoppingCartItemSearchModel.ShoppingCartType)),
@@ -211,7 +207,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     Title = _localizationService.GetResource("Admin.Common.Delete"),
                     Width = "100",
                     Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
-                    ClassName =  StyleColumn.CenterAll
+                    ClassName =  StyleColumn.ButtonStyle
                 }
             };
 

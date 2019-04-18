@@ -114,14 +114,14 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Name = "activityLog-grid",
                 UrlRead = new DataUrl("ListLogs", "ActivityLog", null),
-                UrlAction = new DataUrl("ActivityLogDelete", "ActivityLog", null),
+                UrlDelete = new DataUrl("ActivityLogDelete", "ActivityLog", null),
                 SearchButtonId = "search-log",
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.CreatedOnTo)),
                 new FilterParameter(nameof(searchModel.CreatedOnFrom)),
@@ -132,14 +132,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(ActivityLogModel.Id))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(ActivityLogModel.CustomerId))
-                {
-                    Visible = false
-                },
                 new ColumnProperty(nameof(ActivityLogModel.ActivityLogTypeName))
                 {
                     Title = _localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType"),
@@ -171,7 +163,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     Title = _localizationService.GetResource("Admin.Common.Delete"),
                     Width = "100",
                     Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
-                    ClassName =  StyleColumn.CenterAll
+                    ClassName =  StyleColumn.ButtonStyle
                 }
             };
 

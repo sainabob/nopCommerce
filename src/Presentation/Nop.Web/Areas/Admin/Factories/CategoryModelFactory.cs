@@ -86,6 +86,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
+            searchModel.Grid = PrepareCategoryProductGridModel(searchModel);
 
             return searchModel;
         }
@@ -95,55 +96,69 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Search model</param>
         /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareCategoryGridModel(CategorySearchModel searchModel)
+        protected virtual DataTablesModel PrepareCategoryProductGridModel(CategoryProductSearchModel searchModel)
         {
             //prepare common properties
             var model = new DataTablesModel
             {
-                Name = "categories-grid",
-                UrlRead = new DataUrl("List", "Category", null),
-                SearchButtonId = "search-categories",
+                Name = "products-grid",
+                UrlRead = new DataUrl("ProductList", "Category", null),
+                UrlDelete = new DataUrl("ProductDelete", "Category", null),
                 Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
+                LengthMenu = searchModel.AvailablePageSizes,
 
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>()
-            {
-                new FilterParameter(nameof(searchModel.SearchCategoryName)),
-                new FilterParameter(nameof(searchModel.SearchStoreId))
-            };
+                //prepare filters to search
+                Filters = new List<FilterParameter>
+                {
+                    new FilterParameter(nameof(searchModel.CategoryId), searchModel.CategoryId)
+                },
 
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(CategoryModel.Breadcrumb))
+                //prepare model columns
+                ColumnCollection = new List<ColumnProperty>
                 {
-                    Title = _localizationService.GetResource("Admin.Catalog.Categories.Fields.Name")
-                },
-                new ColumnProperty(nameof(CategoryModel.Published))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Categories.Fields.Published"),
-                    Width = "100",
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(CategoryModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Categories.Fields.DisplayOrder"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(CategoryModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                    new ColumnProperty(nameof(CategoryProductModel.ProductName))
+                    {
+                        Title = _localizationService.GetResource("Admin.Catalog.Categories.Products.Fields.Product")
+                    },
+                    new ColumnProperty(nameof(CategoryProductModel.IsFeaturedProduct))
+                    {
+                        Title = _localizationService.GetResource("Admin.Catalog.Categories.Products.Fields.IsFeaturedProduct"),
+                        Width = "150",
+                        ClassName = StyleColumn.CenterAll,
+                        Render = new RenderBoolean()
+                    },
+                    new ColumnProperty(nameof(CategoryProductModel.DisplayOrder))
+                    {
+                        Title = _localizationService.GetResource("Admin.Catalog.Categories.Products.Fields.DisplayOrder"),
+                        Width = "150"
+                    },
+                    new ColumnProperty(nameof(CategoryProductModel.Id))
+                    {
+                        Title = _localizationService.GetResource("Admin.Common.View"),
+                        Width = "150",
+                        ClassName = StyleColumn.ButtonStyle,
+                        Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/", nameof(CategoryProductModel.ProductId)))
+                    },
+                    new ColumnProperty(nameof(CategoryProductModel.Id))
+                    {
+                        Title = _localizationService.GetResource("Admin.Common.Edit"),
+                        Width = "100",
+                        ClassName =  StyleColumn.ButtonStyle,
+                        Render = new RenderButtonEdit(new DataUrl("Edit"))
+                    },
+                    new ColumnProperty(nameof(CategoryProductModel.Id))
+                    {
+                        Title = _localizationService.GetResource("Admin.Common.Delete"),
+                        Width = "100",
+                        Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")){ Style = StyleButton.Default },
+                        ClassName = StyleColumn.ButtonStyle
+                    }
                 }
             };
 
             return model;
         }
-
+        
         /// <summary>
         /// Prepare datatables model
         /// </summary>
@@ -218,7 +233,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareCategoryGridModel(searchModel);
 
             return searchModel;
         }
@@ -347,9 +361,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new CategoryProductListModel
+            var model = new CategoryProductListModel().PrepareToGrid(searchModel, productCategories, () =>
             {
-                Data = productCategories.Select(productCategory => 
+                return productCategories.Select(productCategory =>
                 {
                     //fill in model values from the entity
                     var categoryProductModel = productCategory.ToModel<CategoryProductModel>();
@@ -357,10 +371,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     categoryProductModel.ProductName = _productService.GetProductById(productCategory.ProductId)?.Name;
 
-                    return categoryProductModel;                    
-                }),
-                Total = productCategories.TotalCount
-            };
+                    return categoryProductModel;
+                });
+            });
 
             return model;
         }

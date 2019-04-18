@@ -430,13 +430,13 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Name = "customer-addresses-grid",
                 UrlRead = new DataUrl("AddressesSelect", "Customer", null),
-                UrlAction = new DataUrl("AddressDelete", "Customer", new RouteValueDictionary { [nameof(CustomerAddressSearchModel.CustomerId)] = searchModel.CustomerId }),
+                UrlDelete = new DataUrl("AddressDelete", "Customer", new RouteValueDictionary { [nameof(searchModel.CustomerId)] = searchModel.CustomerId }),
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.CustomerId), searchModel.CustomerId)
             };
@@ -473,7 +473,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("~/Admin/Customer/AddressEdit?customerId=" + searchModel.CustomerId + "&addressid=", true))
                 },
                 new ColumnProperty(nameof(AddressModel.Id))
@@ -481,7 +481,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     Title = _localizationService.GetResource("Admin.Common.Delete"),
                     Width = "100",
                     Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
-                    ClassName =  StyleColumn.CenterAll
+                    ClassName =  StyleColumn.ButtonStyle
                 }
             };
 
@@ -653,7 +653,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.SelectedCustomerRoleIds)),
                 new FilterParameter(nameof(searchModel.SearchEmail)),
@@ -757,7 +757,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Title = _localizationService.GetResource("Admin.Common.Edit"),
                 Width = "100",
-                ClassName = StyleColumn.CenterAll,
+                ClassName = StyleColumn.ButtonStyle,
                 Render = new RenderButtonEdit(new DataUrl("Edit"))
             });
             
@@ -781,12 +781,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };
-
-            //prepare filters to search
-            model.Filters = null;
-
+            
             //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>()
+            model.ColumnCollection = new List<ColumnProperty>
             {
                 new ColumnProperty(nameof(OnlineCustomerModel.CustomerInfo))
                 {
@@ -838,7 +835,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.SearchRequestTypeId)),
                 new FilterParameter(nameof(searchModel.SearchEmail))                
@@ -1095,7 +1092,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new DataTablesModel
             {
                 Name = "order-grid",
-                UrlRead = new DataUrl("OrderList", "Customer", new RouteValueDictionary { [nameof(CustomerOrderSearchModel.CustomerId)] = searchModel.CustomerId }),
+                UrlRead = new DataUrl("OrderList", "Customer", new RouteValueDictionary { [nameof(searchModel.CustomerId)] = searchModel.CustomerId }),
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes,
             };
@@ -1145,7 +1142,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.View"),
                     Width = "100",
-                    ClassName = StyleColumn.CenterAll,
+                    ClassName = StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("~/Admin/Order/Edit/"))
                 }
             };
@@ -1163,13 +1160,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new DataTablesModel
             {
                 Name = "customer-rewardpoints-grid",
-                UrlRead = new DataUrl("RewardPointsHistorySelect", "Customer", new RouteValueDictionary { [nameof(CustomerRewardPointsSearchModel.CustomerId)] = searchModel.CustomerId }),
+                UrlRead = new DataUrl("RewardPointsHistorySelect", "Customer", new RouteValueDictionary { [nameof(searchModel.CustomerId)] = searchModel.CustomerId }),
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };
 
             //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>()
+            model.ColumnCollection = new List<ColumnProperty>
             {
                 new ColumnProperty(nameof(CustomerRewardPointsModel.StoreName))
                 {

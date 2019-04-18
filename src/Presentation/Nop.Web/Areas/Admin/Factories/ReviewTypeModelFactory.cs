@@ -55,10 +55,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };
-
-            //prepare filters to search
-            model.Filters = null;
-
+            
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
@@ -88,7 +85,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("~/Admin/ReviewType/Edit/"))
                 }
             };

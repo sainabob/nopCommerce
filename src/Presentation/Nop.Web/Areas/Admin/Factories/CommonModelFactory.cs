@@ -630,21 +630,21 @@ namespace Nop.Web.Areas.Admin.Factories
                     Title = _localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.Download"),
                     Render = new RenderCustom("renderDownload"),
                     Width = "150",
-                    ClassName = StyleColumn.CenterAll
+                    ClassName = StyleColumn.ButtonStyle
                 },
                 new ColumnProperty(nameof(BackupFileModel.Name))
                 {
                     Title = _localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.Restore"),
                     Render = new RenderCustom("renderRestore"),
                     Width = "150",
-                    ClassName = StyleColumn.CenterAll
+                    ClassName = StyleColumn.ButtonStyle
                 },
                 new ColumnProperty(nameof(BackupFileModel.Name))
                 {
                     Title = _localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.Delete"),
                     Render = new RenderCustom("renderDelete"),
                     Width = "150",
-                    ClassName = StyleColumn.CenterAll
+                    ClassName = StyleColumn.ButtonStyle
                 }
             };
 
@@ -669,7 +669,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.SeName))
             };
@@ -721,7 +721,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.System.SeNames.Details"),
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderCustom("renderColumnDetailsUrl")
                 }
             };

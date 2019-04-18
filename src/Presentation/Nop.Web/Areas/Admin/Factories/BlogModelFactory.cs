@@ -84,7 +84,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.SearchStoreId))
             };
@@ -92,14 +92,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(BlogPostModel.ApprovedComments))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(BlogPostModel.NotApprovedComments))
-                {
-                    Visible = false
-                },
                 new ColumnProperty(nameof(BlogPostModel.Title))
                 {
                     Title = _localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")
@@ -113,7 +105,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments"),
                     Width = "200",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderCustom("renderColumnComments")
                 },
                 new ColumnProperty(nameof(BlogPostModel.StartDateUtc))
@@ -138,7 +130,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
-                     ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("BlogPostEdit"))
                 }
             };

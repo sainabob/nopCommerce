@@ -97,7 +97,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             //prepare filters to search
-            model.Filters = new List<FilterParameter>()
+            model.Filters = new List<FilterParameter>
             {
                 new FilterParameter(nameof(searchModel.ActivatedId)),
                 new FilterParameter(nameof(searchModel.CouponCode)),
@@ -140,7 +140,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.Common.Edit"),
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderButtonEdit(new DataUrl("Edit"))
                 }
             };
@@ -159,7 +159,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new DataTablesModel
             {
                 Name = "usagehistory-grid",
-                UrlRead = new DataUrl("UsageHistoryList", "GiftCard", new RouteValueDictionary { [nameof(GiftCardUsageHistorySearchModel.GiftCardId)] = searchModel.GiftCardId }),
+                UrlRead = new DataUrl("UsageHistoryList", "GiftCard", new RouteValueDictionary { [nameof(searchModel.GiftCardId)] = searchModel.GiftCardId }),
                 Length = searchModel.PageSize,
                 LengthMenu = searchModel.AvailablePageSizes
             };
@@ -167,10 +167,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model columns
             model.ColumnCollection = new List<ColumnProperty>
             {
-                new ColumnProperty(nameof(GiftCardUsageHistoryModel.CustomOrderNumber))
-                {
-                    Visible = false
-                },
                 new ColumnProperty(nameof(GiftCardUsageHistoryModel.CreatedOn))
                 {
                     Title = _localizationService.GetResource("Admin.GiftCards.History.CreatedOn"),
@@ -181,7 +177,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Title = _localizationService.GetResource("Admin.GiftCards.History.CustomOrderNumber"),
                     Width = "200",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  StyleColumn.ButtonStyle,
                     Render = new RenderCustom("renderColumnOrderNumber")
                 },
                 new ColumnProperty(nameof(GiftCardUsageHistoryModel.UsedValue))
