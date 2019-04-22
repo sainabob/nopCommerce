@@ -10,8 +10,6 @@ namespace Nop.Web.Framework.Models.DataTables
     {
         #region Const
 
-        protected const string DEFAULT_DOM = "lrtip";
-
         protected const string DEFAULT_PAGING_TYPE = "full_numbers";
 
         #endregion
@@ -24,7 +22,6 @@ namespace Nop.Web.Framework.Models.DataTables
         public DataTablesModel()
         {
             //set default values
-            Dom = DEFAULT_DOM;
             ServerSide = true;
             Processing = true;
             Paging = true;
@@ -109,11 +106,6 @@ namespace Nop.Web.Framework.Models.DataTables
         public bool FixedHeader { get; set; }
 
         /// <summary>
-        /// Define the table control elements to appear on the page and in what order.
-        /// </summary>
-        public string Dom { get; set; }
-
-        /// <summary>
         /// Gets or sets custom render header function name(js)
         /// See also https://datatables.net/reference/option/headerCallback
         /// </summary>
@@ -135,7 +127,7 @@ namespace Nop.Web.Framework.Models.DataTables
         /// </summary>
         public DataTablesModel ChildTable { get; set; }
 
-        // <summary>
+        /// <summary>
         /// Gets or sets bind column name for delete action. If this field is not specified, the default will be the alias "id" for the delete action
         /// </summary>
         public string BindColumnNameActionDelete { get; set; }

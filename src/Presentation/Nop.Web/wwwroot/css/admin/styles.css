@@ -1565,9 +1565,12 @@ span.grid-report-item.red {
   padding: 2px;
 }
 .table>tbody>tr>td.button-column .btn{
-    margin-top: 1px;
-    margin-bottom: 1px;
-    padding: 5px 12px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  padding: 5px 12px;
+}
+.data-tables-length {
+  margin: 5px 5px 0 5px;
 }
 
 @media (max-width: 1200px) {

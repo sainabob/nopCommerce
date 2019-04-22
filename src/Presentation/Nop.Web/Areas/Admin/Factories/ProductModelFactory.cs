@@ -31,7 +31,6 @@ using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -401,7 +400,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareCrossSellProductGridModel(searchModel);
 
             return searchModel;
         }
@@ -541,96 +539,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareProductAttributeValueGridModel(ProductAttributeValueSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "productattributevalues-grid",
-                UrlRead = new DataUrl("ProductAttributeValueList", "Product", null),
-                UrlDelete = new DataUrl("ProductAttributeValueDelete", "Product", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.ProductAttributeMappingId), searchModel.ProductAttributeMappingId)
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ProductAttributeValueModel.AttributeValueTypeName))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AttributeValueType"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(ProductAttributeValueModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(ProductAttributeValueModel.AssociatedProductName))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(ProductAttributeValueModel.PriceAdjustmentStr))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(ProductAttributeValueModel.WeightAdjustmentStr))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.WeightAdjustment"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(ProductAttributeValueModel.IsPreSelected))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.IsPreSelected"),
-                    Width = "150",
-                    ClassName = StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(ProductAttributeValueModel.PictureThumbnailUrl))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture"),
-                    Width = "200",
-                    ClassName = StyleColumn.CenterAll,
-                    Render = new RenderPicture()
-                },
-                new ColumnProperty(nameof(ProductAttributeValueModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.DisplayOrder"),
-                    Width = "150"
-                },
-                new ColumnProperty(nameof(ProductAttributeValueModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderCustom("renderColumnEdit")
-                },
-                new ColumnProperty(nameof(ProductAttributeValueModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Delete"),
-                    Width = "100",
-                    Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")) { Style = StyleButton.Default },
-                    ClassName =  StyleColumn.ButtonStyle
-                }
-            };
-
-            return model;
-        }
-
+        
         /// <summary>
         /// Prepare product attribute value search model
         /// </summary>
@@ -650,7 +559,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareProductAttributeValueGridModel(searchModel);
 
             return searchModel;
         }
@@ -700,354 +608,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareProductGridModel(ProductSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "products-grid",
-                UrlRead = new DataUrl("ProductList", "Product", null),
-                SearchButtonId = "search-products",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SearchProductName)),
-                new FilterParameter(nameof(searchModel.SearchCategoryId)),
-                new FilterParameter(nameof(searchModel.SearchIncludeSubCategories)),
-                new FilterParameter(nameof(searchModel.SearchManufacturerId)),
-                new FilterParameter(nameof(searchModel.SearchStoreId)),
-                new FilterParameter(nameof(searchModel.SearchWarehouseId)),
-                new FilterParameter(nameof(searchModel.SearchVendorId)),
-                new FilterParameter(nameof(searchModel.SearchProductTypeId)),
-                new FilterParameter(nameof(searchModel.SearchPublishedId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ProductModel.Id))
-                {
-                    IsMasterCheckBox = true,
-                    Render = new RenderCheckBox("checkbox_products"),
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(ProductModel.PictureThumbnailUrl))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.PictureThumbnailUrl"),
-                    Width = "100",
-                    Render = new RenderPicture()
-                },
-                new ColumnProperty(nameof(ProductModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Name"),
-                    Width = "300"
-                },
-                new ColumnProperty(nameof(ProductModel.Sku))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Sku"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(ProductModel.Price))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Price"),
-                    Width = "150",
-                    Render = new RenderCustom("renderColumnPrice")
-                },
-                new ColumnProperty(nameof(ProductModel.StockQuantityStr))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.StockQuantity"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(ProductModel.ProductTypeName))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.ProductType"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(ProductModel.Published))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Published"),
-                    Width = "100",
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(ProductModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareCrossSellProductGridModel(CrossSellProductSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "crosssellproducts-grid",
-                UrlRead = new DataUrl("CrossSellProductList", "Product", null),
-                UrlDelete = new DataUrl("CrossSellProductDelete", "Product", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes,
-
-                //prepare filters to search
-                Filters = new List<FilterParameter>
-                {
-                    new FilterParameter(nameof(searchModel.ProductId), searchModel.ProductId)
-                },
-
-                //prepare model columns
-                ColumnCollection = new List<ColumnProperty>
-                {
-                    new ColumnProperty(nameof(CrossSellProductModel.Product2Name))
-                    {
-                        Title = _localizationService.GetResource("Admin.Catalog.Products.CrossSells.Fields.Product"),
-                        Render = new RenderCustom("renderColumnCrossSellProductName")
-                    },
-                    new ColumnProperty(nameof(CrossSellProductModel.Id))
-                    {
-                        Title = _localizationService.GetResource("Admin.Common.Delete"),
-                        Width = "100",
-                        Render = new RenderButtonRemove(_localizationService.GetResource("Admin.Common.Delete")){ Style = StyleButton.Default },
-                        ClassName = StyleColumn.ButtonStyle
-                    }
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareAddCrossSellProductGridModel(AddCrossSellProductSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "products-grid",
-                UrlRead = new DataUrl("CrossSellProductAddPopupList", "Product", null),
-                SearchButtonId = "search-products",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SearchProductName)),
-                new FilterParameter(nameof(searchModel.SearchCategoryId)),
-                new FilterParameter(nameof(searchModel.SearchManufacturerId)),
-                new FilterParameter(nameof(searchModel.SearchStoreId)),
-                new FilterParameter(nameof(searchModel.SearchVendorId)),
-                new FilterParameter(nameof(searchModel.SearchProductTypeId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ProductModel.Id))
-                {
-                    IsMasterCheckBox = true,
-                    Render = new RenderCheckBox(nameof(AddCrossSellProductModel.SelectedProductIds)),
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(ProductModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Name")
-                },
-                new ColumnProperty(nameof(ProductModel.Published))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Published"),
-                    Width = "100",
-                    Render = new RenderBoolean()
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareAddRelatedProductGridModel(AddRelatedProductSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "products-grid",
-                UrlRead = new DataUrl("RelatedProductAddPopupList", "Product", null),
-                SearchButtonId = "search-products",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SearchProductName)),
-                new FilterParameter(nameof(searchModel.SearchCategoryId)),
-                new FilterParameter(nameof(searchModel.SearchManufacturerId)),
-                new FilterParameter(nameof(searchModel.SearchStoreId)),
-                new FilterParameter(nameof(searchModel.SearchVendorId)),
-                new FilterParameter(nameof(searchModel.SearchProductTypeId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ProductModel.Id))
-                {
-                    IsMasterCheckBox = true,
-                    Render = new RenderCheckBox(nameof(AddRelatedProductModel.SelectedProductIds)),
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(ProductModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Name")
-                },
-                new ColumnProperty(nameof(ProductModel.Published))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Published"),
-                    Width = "100",
-                    Render = new RenderBoolean()
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareAddAssociatedProductGridModel(AddAssociatedProductSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "products-grid",
-                UrlRead = new DataUrl("AssociatedProductAddPopupList", "Product", null),
-                SearchButtonId = "search-products",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SearchProductName)),
-                new FilterParameter(nameof(searchModel.SearchCategoryId)),
-                new FilterParameter(nameof(searchModel.SearchManufacturerId)),
-                new FilterParameter(nameof(searchModel.SearchStoreId)),
-                new FilterParameter(nameof(searchModel.SearchVendorId)),
-                new FilterParameter(nameof(searchModel.SearchProductTypeId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ProductModel.Id))
-                {
-                    IsMasterCheckBox = true,
-                    Render = new RenderCheckBox(nameof(AddAssociatedProductModel.SelectedProductIds)),
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(ProductModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Name"),
-                    Render = new RenderCustom("renderColumnName")
-                },
-                new ColumnProperty(nameof(ProductModel.Published))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Published"),
-                    Width = "100",
-                    Render = new RenderBoolean()
-                }
-            };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareAddRequiredProductGridModel(AddRequiredProductSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "products-grid",
-                UrlRead = new DataUrl("RequiredProductAddPopupList", "Product", null),
-                SearchButtonId = "search-products",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>
-            {
-                new FilterParameter(nameof(searchModel.SearchProductName)),
-                new FilterParameter(nameof(searchModel.SearchCategoryId)),
-                new FilterParameter(nameof(searchModel.SearchManufacturerId)),
-                new FilterParameter(nameof(searchModel.SearchStoreId)),
-                new FilterParameter(nameof(searchModel.SearchVendorId)),
-                new FilterParameter(nameof(searchModel.SearchProductTypeId))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(ProductModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Select"),
-                    Render = new RenderCustom("renderColumnSelectProduct"),
-                    ClassName =  StyleColumn.ButtonStyle,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(ProductModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Name")
-                },
-                new ColumnProperty(nameof(ProductModel.Published))
-                {
-                    Title = _localizationService.GetResource("Admin.Catalog.Products.Fields.Published"),
-                    Width = "100",
-                    Render = new RenderBoolean()
-                }
-            };
-
-            return model;
-        }
-
+        
         #endregion
 
         #region Methods
@@ -1105,7 +666,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare grid
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareProductGridModel(searchModel);
 
             return searchModel;
         }
@@ -1376,7 +936,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
-            searchModel.Grid = PrepareAddRequiredProductGridModel(searchModel);
             
             return searchModel;
         }
@@ -1486,7 +1045,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
-            searchModel.Grid = PrepareAddRelatedProductGridModel(searchModel);
 
             return searchModel;
         }
@@ -1599,7 +1157,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
-            searchModel.Grid = PrepareAddCrossSellProductGridModel(searchModel);
 
             return searchModel;
         }
@@ -1708,7 +1265,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
-            searchModel.Grid = PrepareAddAssociatedProductGridModel(searchModel);
 
             return searchModel;
         }
@@ -1822,9 +1378,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetProductSpecificationAttributes(product.Id).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductSpecificationAttributeListModel
+            var model = new ProductSpecificationAttributeListModel().PrepareToGrid(searchModel, productSpecificationAttributes, () =>
             {
-                Data = productSpecificationAttributes.Select(attribute =>
+                return productSpecificationAttributes.Select(attribute =>
                 {
                     //fill in model values from the entity
                     var productSpecificationAttributeModel = attribute.ToModel<ProductSpecificationAttributeModel>();
@@ -1852,9 +1408,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     }
 
                     return productSpecificationAttributeModel;
-                }),
-                Total = productSpecificationAttributes.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -1985,9 +1540,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ProductTagListModel
+            var model = new ProductTagListModel().PrepareToGrid(searchModel, productTags, () =>
             {
-                Data = productTags.Select(tag =>
+                return productTags.Select(tag =>
                 {
                     //fill in model values from the entity
                     var productTagModel = tag.ToModel<ProductTagModel>();
@@ -1996,9 +1551,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     productTagModel.ProductCount = _productTagService.GetProductCount(tag.Id, storeId: 0, showHidden: true);
 
                     return productTagModel;
-                }),
-                Total = productTags.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -2057,9 +1611,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new ProductOrderListModel
+            var model = new ProductOrderListModel().PrepareToGrid(searchModel, orders, () =>
             {
-                Data = orders.Select(order =>
+                return orders.Select(order =>
                 {
                     //fill in model values from the entity
                     var orderModel = new OrderModel
@@ -2079,9 +1633,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     orderModel.ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus);
 
                     return orderModel;
-                }),
-                Total = orders.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -2173,9 +1726,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .ToList().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new TierPriceListModel
+            var model = new TierPriceListModel().PrepareToGrid(searchModel, tierPrices, () =>
             {
-                Data = tierPrices.Select(price =>
+                return tierPrices.Select(price =>
                 {
                     //fill in model values from the entity
                     var tierPriceModel = price.ToModel<TierPriceModel>();
@@ -2190,9 +1743,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         : _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All");
 
                     return tierPriceModel;
-                }),
-                Total = tierPrices.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -2299,9 +1851,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetProductAttributeMappingsByProductId(product.Id).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductAttributeMappingListModel
+            var model = new ProductAttributeMappingListModel().PrepareToGrid(searchModel, productAttributeMappings, () =>
             {
-                Data = productAttributeMappings.Select(attributeMapping =>
+                return productAttributeMappings.Select(attributeMapping =>
                 {
                     //fill in model values from the entity
                     var productAttributeMappingModel = attributeMapping.ToModel<ProductAttributeMappingModel>();
@@ -2325,9 +1877,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     }
 
                     return productAttributeMappingModel;
-                }),
-                Total = productAttributeMappings.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -2600,18 +2151,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AssociateProductToAttributeValueListModel
+            var model = new AssociateProductToAttributeValueListModel().PrepareToGrid(searchModel, products, () =>
             {
                 //fill in model values from the entity
-                Data = products.Select(product =>
+                return products.Select(product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
                     productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
 
                     return productModel;
-                }),
-                Total = products.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -2636,9 +2186,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetAllProductAttributeCombinations(product.Id).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductAttributeCombinationListModel
+            var model = new ProductAttributeCombinationListModel().PrepareToGrid(searchModel, productAttributeCombinations, () =>
             {
-                Data = productAttributeCombinations.Select(combination =>
+                return productAttributeCombinations.Select(combination =>
                 {
                     //fill in model values from the entity
                     var productAttributeCombinationModel = combination.ToModel<ProductAttributeCombinationModel>();
@@ -2658,9 +2208,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     productAttributeCombinationModel.Warnings = new List<string> { warnings };
 
                     return productAttributeCombinationModel;
-                }),
-                Total = productAttributeCombinations.TotalCount
-            };
+                });
+            });
 
             return model;
         }

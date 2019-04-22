@@ -2,7 +2,6 @@
 @using System.Net;
 @using System.Runtime.Serialization;
 @using System.Text.Encodings.Web
-@using Nop.Web.Framework.Models.DataTables;
 
 @{
     //the locale which MomentJS should use - the default is en (English).
@@ -73,6 +72,7 @@ else
         url: '@Html.Raw(GetUrl(Model.UrlRead))',
         type: '@WebRequestMethods.Http.Post',
         dataType: 'json',
+        dataSrc: 'Data',
         data: function(data) {
             @if (Model.Filters != null)
             {
@@ -131,10 +131,28 @@ paging: @Model.Paging.ToString().ToLower(),
 pagingType: '@Model.PagingType',
 language: @await Html.PartialAsync("_GridLocalization"),
 pageLength: @Model.Length,
-lengthMenu: [@Model.LengthMenu],
+@if (!string.IsNullOrEmpty(Model.LengthMenu))
+{
+    <text>
+        lengthMenu: [@Model.LengthMenu],
+    </text>
+}
+else
+{
+    <text>
+        lengthChange: false,
+    </text>
+}
 ordering: @Model.Ordering.ToString().ToLower(),
 fixedHeader: @Model.FixedHeader.ToString().ToLower(),
-dom: '@Model.Dom',
+dom: '<"row"<"col-md-12"t>>' +
+     '<"row"' +
+        '<"col-md-8"<"row"' +
+            '<"col-md-6"<"pull-left"p>>' +
+            '<"col-md-6"<"pull-left data-tables-length"l>>' +
+        '>>' +
+        '<"col-md-4"<"pull-right"i>>' +
+     '>',
 columns: [
     @foreach (var column in Model.ColumnCollection)
     {
@@ -193,7 +211,7 @@ columns: [
                         @if (!string.IsNullOrEmpty(link.Title))
                         {
                             <text>
-                                return '<a href="@GetUrl(link.Url)' + row.@link.Url.DataId + '">@link.Title</a>';
+                            return '<a href="@GetUrl(link.Url)' + row.@link.Url.DataId + '">@JavaScriptEncoder.Default.Encode(link.Title)</a>';
                             </text>
                         }
                         else
@@ -246,7 +264,7 @@ columns: [
                     {
                         <text>
                         render: function (data, type, row, meta) {
-                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" onclick="@buttonCustom.OnClickFunctionName' + '(' + data + ')">@buttonCustom.Title</a>';
+                            return '<a class="@GetEnumValue(typeof(StyleButton), buttonCustom.Style)" onclick="@buttonCustom.OnClickFunctionName' + '(' + data + ')">@JavaScriptEncoder.Default.Encode(buttonCustom.Title)</a>';
                         },
                         </text>
                     }
