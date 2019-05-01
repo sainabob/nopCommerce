@@ -107,8 +107,8 @@
                             new ColumnProperty(nameof(UrlRecordModel.IsActive))
                             {
                                 Title = T("Admin.System.SeNames.IsActive").Text,
-                                ClassName = StyleColumn.CenterAll,
                                 Width = "50",
+                                ClassName = StyleColumn.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(UrlRecordModel.Language))
@@ -159,7 +159,7 @@
                     selectedIds = [];
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    $('#deleteSelectedSeNamesFailed-info').html(thrownError);
+                    $('#deleteSelectedSeNamesFailed-info').text(thrownError);
                     $("#deleteSelectedSeNamesFailed").click();
                 },
                 traditional: true

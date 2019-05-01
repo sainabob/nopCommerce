@@ -214,7 +214,8 @@
                             new ColumnProperty(nameof(ProductReviewModel.Rating))
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.Rating").Text,
-                                Width = "100"
+                                Width = "100",
+                                ClassName =  StyleColumn.CenterAll
                             },
                             new ColumnProperty(nameof(ProductReviewModel.IsApproved))
                             {
@@ -259,9 +260,10 @@
                                     complete: function(data) {
                                         //reload grid
                                         $('#productreviews-grid').DataTable().ajax.reload();
+                                        selectedIds = [];
                                     },
                                     error: function(xhr, ajaxOptions, thrownError) {
-                                        $('#approveSelectedFailed-info').html(thrownError);
+                                        $('#approveSelectedFailed-info').text(thrownError);
                                         $("#approveSelectedFailed").click();
                                     },
                                     traditional: true
@@ -286,9 +288,10 @@
                                     complete: function(data) {
                                         //reload grid
                                         $('#productreviews-grid').DataTable().ajax.reload();
+                                        selectedIds = [];
                                     },
                                     error: function(xhr, ajaxOptions, thrownError) {
-                                        $('#disapproveSelectedFailed-info').html(thrownError);
+                                        $('#disapproveSelectedFailed-info').text(thrownError);
                                         $("#disapproveSelectedFailed").click();
                                     },
                                     traditional: true
@@ -310,9 +313,10 @@
                                     complete: function (data) {
                                         //reload grid
                                         $('#productreviews-grid').DataTable().ajax.reload();
+                                        selectedIds = [];
                                     },
                                     error: function (xhr, ajaxOptions, thrownError) {
-                                        $('#deleteSelectedFailed-info').html(thrownError);
+                                        $('#deleteSelectedFailed-info').text(thrownError);
                                         $("#deleteSelectedFailed").click();
                                     }
                                 });

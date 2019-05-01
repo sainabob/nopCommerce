@@ -6,7 +6,7 @@ declare @resources xml
 set @resources='
 <Language>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Title.Required">
-    <Value>Title is required</Value>
+    <Value></Value>
   </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.Order.DisableBillingAddressCheckoutStep.Hint">
     <Value>Check to disable "Billing address" step during checkout. Billing address will be pre-filled and saved using the default registration data (this option cannot be used with guest checkout enabled). Also ensure that appropriate address fields that cannot be pre-filled are not required (or disabled). If a customer doesn''t have a billing address, then the billing address step will be displayed.</Value>
@@ -108,7 +108,7 @@ set @resources='
     <Value>Failed to save download object.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.VendorNotes.AddTitle.Alert.FailedAddNote">
-    <Value>Failed to add vendor note.</Value>
+    <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Alert.FailedAdd">
     <Value></Value>
@@ -238,12 +238,12 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.DT.EmptyTable">
     <Value>No data available in table</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.DT.Info">
-    <Value>Showing _START_ to _END_ of _TOTAL_ entries</Value>
+    <Value>_START_-_END_ of _TOTAL_ items</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.DT.InfoEmpty">
-    <Value>Showing 0 to 0 of 0 entries</Value>
+    <Value>No records</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.DT.InfoFiltered">
     <Value>(filtered from _MAX_ total entries)</Value>
@@ -252,7 +252,7 @@ set @resources='
     <Value>,</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.DT.lengthMenu">
-    <Value>Show _MENU_ entries</Value>
+    <Value>Show _MENU_ items</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.DT.LoadingRecords">
     <Value>Loading...</Value>
@@ -650,6 +650,126 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.UPS.Fields.SaturdayDeliveryEnabled.Hint">
     <Value>Check to get rates for Saturday Delivery options.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Errors">
+    <Value><![CDATA[The store has some error(s) or warning(s). Please find more information on the <a href="{0}">Warnings</a> page]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.Fields.UserName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.Fields.Username">
+    <Value>Username</Value>
+  </LocaleResource>
+ <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickUpInStore">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickUpInStore.Hint">
+    <Value></Value>
+  </LocaleResource>
+   <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickupInStore">
+    <Value>"Pick Up in Store" enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickupInStore.Hint">
+    <Value>A value indicating whether "Pick Up in Store" option is enabled during checkout. Please ensure that you have at least one active pickup point provider.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickUpInStore">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickUpInStore.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickupInStore">
+    <Value>Ignore additional shipping charge for pick up in store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickupInStore.Hint">
+    <Value>Check if you want ignore additional shipping charge for pick up in store.</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Catalog.BulkEdit">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod.MultipleWarehouse">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Name">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.OldPrice">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Price">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Published">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.SKU">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.StockQuantity">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchCategory">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchCategory.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchManufacturer">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchManufacturer.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchProductName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchProductName.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.BulkEdit">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.All">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Display">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Empty">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.First">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.ItemsPerPage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Last">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.MorePages">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Next">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Of">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Page">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Previous">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Pager.Refresh">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorNotes.Fields.Note.Validation">
+      <Value>Vendor note can not be empty.</Value>
+  </LocaleResource>
 </Language>'
 
 CREATE TABLE #LocaleStringResourceTmp
@@ -728,12 +848,7 @@ SET [IncludeInFooterColumn1] = 0
 WHERE [SystemName] = 'VendorTermsOfService'
 GO
 
-UPDATE [Topic]
-SET [Title] = ISNULL([SystemName], '')
-WHERE [Title] IS NULL OR [Title] = ''
-GO
-
-ALTER TABLE [Topic] ALTER COLUMN [Title] nvarchar(max) NOT NULL
+ALTER TABLE [Topic] ALTER COLUMN [Title] nvarchar(max) NULL
 GO
 
 -- #3236
@@ -1868,4 +1983,40 @@ GO
 --delete setting
 DELETE FROM [Setting]
 WHERE [Name] = N'upssettings.url'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'squarepaymentsettings.refreshtoken')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'squarepaymentsettings.refreshtoken', N'00000000-0000-0000-0000-000000000000', 0)
+END
+GO
+
+--rename column
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[Order]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+AND EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[Order]') and NAME='PickUpInStore')
+BEGIN
+    EXEC sp_RENAME '[Order].[PickUpInStore]', 'PickupInStore', 'COLUMN'
+END
+GO
+
+--update setting
+UPDATE [Setting]
+SET [Value] = '7'
+WHERE [Name] = 'adminareasettings.popupgridpagesize'
+GO
+
+--update setting
+UPDATE [Setting]
+SET [Value] = '7, 15, 20, 50, 100'
+WHERE [Name] = 'adminareasettings.gridpagesizes'
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Picture]') AND NAME = 'VirtualPath')
+BEGIN
+	ALTER TABLE [Picture] ADD
+	VirtualPath nvarchar(MAX) NULL
+END
 GO

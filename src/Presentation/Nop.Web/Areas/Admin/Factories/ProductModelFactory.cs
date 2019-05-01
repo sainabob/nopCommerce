@@ -998,9 +998,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetRelatedProductsByProductId1(productId1: product.Id, showHidden: true).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new RelatedProductListModel
+            var model = new RelatedProductListModel().PrepareToGrid(searchModel, relatedProducts, () =>
             {
-                Data = relatedProducts.Select(relatedProduct =>
+                return relatedProducts.Select(relatedProduct =>
                 {
                     //fill in model values from the entity
                     var relatedProductModel = relatedProduct.ToModel<RelatedProductModel>();
@@ -1009,10 +1009,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     relatedProductModel.Product2Name = _productService.GetProductById(relatedProduct.ProductId2)?.Name;
 
                     return relatedProductModel;
-                }),
-                Total = relatedProducts.TotalCount
-            };
-
+                });
+            });
             return model;
         }
 
@@ -1220,18 +1218,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 vendorId: _workContext.CurrentVendor?.Id ?? 0).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new AssociatedProductListModel
+            var model = new AssociatedProductListModel().PrepareToGrid(searchModel, associatedProducts, () =>
             {
-                //fill in model values from the entity
-                Data = associatedProducts.Select(associatedProduct =>
+                return associatedProducts.Select(associatedProduct =>
                 {
                     var associatedProductModel = associatedProduct.ToModel<AssociatedProductModel>();
                     associatedProductModel.ProductName = associatedProduct.Name;
 
                     return associatedProductModel;
-                }),
-                Total = associatedProducts.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -1335,25 +1331,24 @@ namespace Nop.Web.Areas.Admin.Factories
             var productPictures = _productService.GetProductPicturesByProductId(product.Id).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductPictureListModel
+            var model = new ProductPictureListModel().PrepareToGrid(searchModel, productPictures, () =>
             {
-                Data = productPictures.Select(productPicture =>
+                return productPictures.Select(productPicture =>
                 {
                     //fill in model values from the entity
                     var productPictureModel = productPicture.ToModel<ProductPictureModel>();
 
                     //fill in additional values (not existing in the entity)
                     var picture = _pictureService.GetPictureById(productPicture.PictureId)
-                        ?? throw new Exception("Picture cannot be loaded");
+                                  ?? throw new Exception("Picture cannot be loaded");
 
                     productPictureModel.PictureUrl = _pictureService.GetPictureUrl(picture);
                     productPictureModel.OverrideAltAttribute = picture.AltAttribute;
                     productPictureModel.OverrideTitleAttribute = picture.TitleAttribute;
 
                     return productPictureModel;
-                }),
-                Total = productPictures.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -1640,73 +1635,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare bulk edit product search model
-        /// </summary>
-        /// <param name="searchModel">Bulk edit product search model</param>
-        /// <returns>Bulk edit product search model</returns>
-        public virtual BulkEditProductSearchModel PrepareBulkEditProductSearchModel(BulkEditProductSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare available categories
-            _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
-
-            //prepare available manufacturers
-            _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
-
-            //prepare available product types
-            _baseAdminModelFactory.PrepareProductTypes(searchModel.AvailableProductTypes);
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
-        /// Prepare paged bulk edit product list model
-        /// </summary>
-        /// <param name="searchModel">Bulk edit product search model</param>
-        /// <returns>Bulk edit product list model</returns>
-        public virtual BulkEditProductListModel PrepareBulkEditProductListModel(BulkEditProductSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //get products
-            var products = _productService.SearchProducts(showHidden: true,
-                categoryIds: new List<int> { searchModel.SearchCategoryId },
-                manufacturerId: searchModel.SearchManufacturerId,
-                vendorId: _workContext.CurrentVendor?.Id ?? 0,
-                productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,
-                keywords: searchModel.SearchProductName,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
-
-            //prepare list model
-            var model = new BulkEditProductListModel
-            {
-                Data = products.Select(product =>
-                {
-                    //fill in model values from the entity
-                    var productModel = product.ToModel<BulkEditProductModel>();
-
-                    //fill in additional values (not existing in the entity)
-                    productModel.ManageInventoryMethod = _localizationService.GetLocalizedEnum(product.ManageInventoryMethod);
-                    if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock && product.UseMultipleWarehouses)
-                    {
-                        productModel.ManageInventoryMethod = $"{productModel.ManageInventoryMethod} {_localizationService.GetResource("Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod.MultipleWarehouse")}";
-                    }
-
-                    return productModel;
-                }),
-                Total = products.TotalCount
-            };
-
-            return model;
-        }
-
-        /// <summary>
         /// Prepare paged tier price list model
         /// </summary>
         /// <param name="searchModel">Tier price search model</param>
@@ -1801,21 +1729,24 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new StockQuantityHistoryListModel
+            var model = new StockQuantityHistoryListModel().PrepareToGrid(searchModel, stockQuantityHistory, () =>
             {
-                Data = stockQuantityHistory.Select(historyEntry =>
+                return stockQuantityHistory.Select(historyEntry =>
                 {
                     //fill in model values from the entity
                     var stockQuantityHistoryModel = historyEntry.ToModel<StockQuantityHistoryModel>();
 
                     //convert dates to the user time
-                    stockQuantityHistoryModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
+                    stockQuantityHistoryModel.CreatedOn =
+                        _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    var combination = _productAttributeService.GetProductAttributeCombinationById(historyEntry.CombinationId ?? 0);
+                    var combination =
+                        _productAttributeService.GetProductAttributeCombinationById(historyEntry.CombinationId ?? 0);
                     if (combination != null)
                     {
-                        stockQuantityHistoryModel.AttributeCombination = _productAttributeFormatter.FormatAttributes(historyEntry.Product,
+                        stockQuantityHistoryModel.AttributeCombination = _productAttributeFormatter.FormatAttributes(
+                            historyEntry.Product,
                             combination.AttributesXml, _workContext.CurrentCustomer, renderGiftCardAttributes: false);
                     }
 
@@ -1824,9 +1755,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         : _localizationService.GetResource("Admin.Catalog.Products.Fields.Warehouse.None");
 
                     return stockQuantityHistoryModel;
-                }),
-                Total = stockQuantityHistory.TotalCount
-            };
+                });
+            });
 
             return model;
         }
